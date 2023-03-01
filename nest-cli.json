@@ -1,6 +1,12 @@
 {
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/tasks-apis/src",
+  "compilerOptions": {
+    "webpack": false,
+    "tsConfigPath": "apps/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/tasks-apis",
   "projects": {
     "boat": {
       "type": "library",
@@ -47,11 +53,5 @@
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
     }
-  },
-  "compilerOptions": {
-    "webpack": true,
-    "tsConfigPath": "apps/tasks-apis/tsconfig.app.json"
-  },
-  "monorepo": true,
-  "root": "apps/tasks-apis"
+  }
 }
