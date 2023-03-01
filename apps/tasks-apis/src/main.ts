@@ -3,5 +3,5 @@ import { AppModule } from "./module";
 
 RestServer.make(AppModule, {
   addValidationContainer: true,
-  port: 5000
+  port: Number(process.env.APP_PORT)
 })
