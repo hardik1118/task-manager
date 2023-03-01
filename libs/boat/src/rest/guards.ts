@@ -1,6 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { get, omit } from 'lodash';
+import { Request } from './interfaces';
 
 @Injectable()
 export class RequestGuard implements CanActivate {
@@ -21,12 +22,14 @@ export class RequestGuard implements CanActivate {
   bindResponseHelpers(response: any): any {
     const success = function (
       data: Record<string, any> | Array<any> | string,
+      message,
       status = 200,
     ) {
       return response.status(status).json({
         success: true,
         code: status,
         data: data,
+        message: message,
       });
     };
 
@@ -88,7 +91,27 @@ export class RequestGuard implements CanActivate {
       return inputs;
     };
 
+    const getContext = function (): Request {
+      return {
+        user: request.user,
+        ...request.query,
+        ...request.body,
+        ...request.params,
+      };
+    };
+
+    const client = function (): Record<string, any> {
+      return {
+        timezone: request.headers.timezone,
+        deviceHash: request.headers['x-device-hash'],
+        appVersion: request.headers['x-app-version'],
+        deviceLang: request.headers['x-device-lang'],
+      };
+    };
+
     request.all = all;
+    request.getContext = getContext;
+    request.client = client;
     return request;
   }
 }

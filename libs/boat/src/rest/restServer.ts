@@ -4,6 +4,7 @@ import { ServerOptions } from './interfaces';
 import { ConfigService } from '@nestjs/config';
 import { RequestGuard } from './guards';
 import { ExceptionFilter } from '../exceptions';
+import { TimeoutInterceptor } from './timeoutInterceptor';
 
 export class RestServer {
   private module: any;
@@ -21,14 +22,26 @@ export class RestServer {
       useContainer(app.select(module), { fallbackOnErrors: true });
     }
 
-    app.enableCors({ origin: true });
-
-    app.useGlobalGuards(new RequestGuard());
-    const { httpAdapter } = app.get(HttpAdapterHost);
-    app.useGlobalFilters(new ExceptionFilter(httpAdapter));
-    options.globalPrefix && app.setGlobalPrefix(options.globalPrefix);
+    app.enableCors({
+      origin: true,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      credentials: true,
+    });
 
     const config = app.get(ConfigService, { strict: false });
-    await app.listen(options.port || config.get<number>('app.port'));
+    const server = app.getHttpServer();
+
+    // interceptors
+    app.useGlobalInterceptors(new TimeoutInterceptor());
+    // guards
+    app.useGlobalGuards(new RequestGuard());
+
+    const { httpAdapter } = app.get(HttpAdapterHost);
+    app.useGlobalFilters(new ExceptionFilter(httpAdapter));
+
+    options.globalPrefix && app.setGlobalPrefix(options.globalPrefix);
+    const appPort = options.port || config.get<number>('app.port');
+    await app.listen(appPort);
+    console.log(`🚀 ${module.name} is running on appPort - ${appPort}`);
   }
 }

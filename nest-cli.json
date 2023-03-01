@@ -1,6 +1,6 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/tasks-apis/src",
   "projects": {
     "boat": {
       "type": "library",
@@ -10,9 +10,48 @@
       "compilerOptions": {
         "tsConfigPath": "libs/boat/tsconfig.lib.json"
       }
+    },
+    "database": {
+      "type": "library",
+      "root": "libs/database",
+      "entryFile": "index",
+      "sourceRoot": "libs/database/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/database/tsconfig.lib.json"
+      }
+    },
+    "tasks-apis": {
+      "type": "application",
+      "root": "apps/tasks-apis",
+      "entryFile": "main",
+      "sourceRoot": "apps/tasks-apis/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/tasks-apis/tsconfig.app.json"
+      }
+    },
+    "task-lib": {
+      "type": "library",
+      "root": "libs/task-lib",
+      "entryFile": "index",
+      "sourceRoot": "libs/task-lib/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/task-lib/tsconfig.lib.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
     }
   },
   "compilerOptions": {
-    "webpack": false
-  }
+    "webpack": true,
+    "tsConfigPath": "apps/tasks-apis/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/tasks-apis"
 }
