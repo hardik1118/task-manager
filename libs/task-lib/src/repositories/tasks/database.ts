@@ -29,7 +29,7 @@ export class TaskRepository extends DatabaseRepository<ITaskModel> implements Ta
 
         query.cOrderBy('createdAt:desc');
 
-        const result = get(inputs, 'paginate', true)
+        const result = get(inputs, 'paginate', false)
             ? query.paginate<ITaskModel>(inputs.page, inputs.perPage)
             : query.allPages<ITaskModel>();
 
